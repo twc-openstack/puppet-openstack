@@ -62,6 +62,17 @@ describe 'openstack::auth_file' do
     end
   end
 
+  describe 'when disabling openrc creation' do
+
+    let :params do
+      {
+        :admin_password  => 'admin',
+        :create_openrc   => 'false',
+      }
+    end
+
+    it { should contain_file('/root/openrc').with_ensure('absent') }
+  end
   describe "handle password and token with single quotes" do
 
     let :params do

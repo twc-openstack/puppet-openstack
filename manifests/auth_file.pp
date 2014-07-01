@@ -7,7 +7,7 @@
 # === Parameters
 #
 # [*admin_password*]
-#   (required) Admin password.
+#   (required) Admin password
 # [*controller_node*]
 #   (optional) Keystone address. Defaults to '127.0.0.1'.
 # [*keystone_admin_token*]
@@ -33,6 +33,9 @@
 #   (optional) Defaults to 'publicURL'.
 # [*neutron_endpoint_type*]
 #   (optional) Defaults to 'publicURL'.
+# [*create_openrc*]
+#   (optional) Whether the openrc file should be created. Defaults to
+#   true. When false the file will be removed if it exists.
 #
 class openstack::auth_file(
   $admin_password,
@@ -47,12 +50,20 @@ class openstack::auth_file(
   $keystone_endpoint_type   = 'publicURL',
   $nova_endpoint_type       = 'publicURL',
   $neutron_endpoint_type    = 'publicURL',
+  $create_openrc            = true,
 ) {
 
-  file { '/root/openrc':
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0700',
-    content => template("${module_name}/openrc.erb")
+  if $create_openrc {
+    file { '/root/openrc':
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0700',
+      content => template("${module_name}/openrc.erb")
+    }
+  }
+  else {
+    file { '/root/openrc':
+      ensure => absent,
+    }
   }
 }
